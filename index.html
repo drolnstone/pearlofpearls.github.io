@@ -169,20 +169,82 @@
   .conflist li{display:flex;gap:.9rem;align-items:flex-start;font-size:.98rem;color:rgba(243,239,245,.86)}
   .conflist li::before{content:"";flex:0 0 auto;width:9px;height:9px;border-radius:50%;background:var(--drop);margin-top:.52rem}
 
-  /* gallery */
+  /* gallery: stacks of photographs */
   .gallery{border-bottom:1px solid var(--line)}
-  .grid-shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin-top:2.4rem}
-  .shot{
-    position:relative;aspect-ratio:4/3;overflow:hidden;
+  .grid-shots{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:clamp(1.8rem,4vw,3rem) clamp(1.4rem,3vw,2.4rem);margin-top:3rem
+  }
+
+  .stack{
+    appearance:none;border:0;background:none;padding:0;margin:0;
+    font:inherit;color:inherit;text-align:left;cursor:pointer;display:block;width:100%;
+  }
+  .stack .deck{position:relative;aspect-ratio:4/3;perspective:900px}
+  .stack .card{
+    position:absolute;inset:0;overflow:hidden;
     background:linear-gradient(140deg,var(--nacre) 0%,var(--nacre-2) 100%);
-    border:1px solid var(--line);display:flex;align-items:flex-end;
+    border:1px solid var(--line);
+    box-shadow:0 6px 18px rgba(14,30,56,.13);
+    transition:transform .38s cubic-bezier(.2,.7,.3,1), box-shadow .38s;
+    transform-origin:50% 100%;
   }
-  .shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  .shot span{
-    position:relative;z-index:2;margin:0;padding:.85rem 1rem;font-size:.82rem;
-    letter-spacing:.06em;color:var(--ink-soft);opacity:.75
+  .stack .card img{width:100%;height:100%;object-fit:cover;display:block}
+  /* the three visible layers, deepest first */
+  .stack .card:nth-child(1){transform:rotate(-3.2deg) translate(-5px,4px)}
+  .stack .card:nth-child(2){transform:rotate(2.4deg) translate(5px,2px)}
+  .stack .card:nth-child(3){transform:rotate(-.5deg)}
+  .stack:hover .card:nth-child(1),.stack:focus-visible .card:nth-child(1){transform:rotate(-8deg) translate(-16px,-6px)}
+  .stack:hover .card:nth-child(2),.stack:focus-visible .card:nth-child(2){transform:rotate(6.5deg) translate(16px,-3px)}
+  .stack:hover .card:nth-child(3),.stack:focus-visible .card:nth-child(3){transform:rotate(-.5deg) translateY(-9px);box-shadow:0 18px 36px rgba(14,30,56,.22)}
+
+  .stack .meta{display:flex;align-items:baseline;gap:.6rem;margin-top:1.15rem}
+  .stack .meta h3{font-size:1.03rem}
+  .stack .meta .count{
+    font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;opacity:.5;white-space:nowrap
   }
-  .shot.tall{aspect-ratio:3/4}
+  .stack .empty{
+    position:absolute;inset:0;display:grid;place-items:center;
+    font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);opacity:.42
+  }
+
+  /* lightbox */
+  .lb{
+    position:fixed;inset:0;z-index:100;display:none;
+    background:rgba(9,17,32,.94);
+    align-items:center;justify-content:center;padding:clamp(1rem,4vw,3rem);
+  }
+  .lb.open{display:flex}
+  .lb figure{margin:0;max-width:min(1000px,92vw);max-height:88vh;display:flex;flex-direction:column;gap:.9rem}
+  .lb img{
+    max-width:100%;max-height:76vh;object-fit:contain;display:block;margin-inline:auto;
+    box-shadow:0 24px 60px rgba(0,0,0,.5)
+  }
+  .lb figcaption{
+    color:rgba(243,239,245,.82);font-size:.9rem;text-align:center;
+    display:flex;justify-content:center;gap:.9rem;align-items:baseline
+  }
+  .lb figcaption b{font-weight:500;font-family:'Fraunces',serif;font-size:1.05rem;color:var(--nacre)}
+  .lb .placeholder{
+    width:min(760px,88vw);aspect-ratio:4/3;display:grid;place-items:center;
+    background:linear-gradient(140deg,#1B2E4F,#0E1E38);border:1px solid rgba(243,239,245,.22);
+    color:rgba(243,239,245,.6);font-size:.85rem;letter-spacing:.1em;text-transform:uppercase
+  }
+  .lb button{
+    position:absolute;appearance:none;border:0;cursor:pointer;
+    background:rgba(243,239,245,.1);color:var(--nacre);
+    width:52px;height:52px;border-radius:50%;display:grid;place-items:center;
+    transition:background .2s;
+  }
+  .lb button:hover{background:var(--drop)}
+  .lb .close{top:clamp(.8rem,3vw,1.6rem);right:clamp(.8rem,3vw,1.6rem)}
+  .lb .prev{left:clamp(.5rem,2.5vw,2rem);top:50%;transform:translateY(-50%)}
+  .lb .next{right:clamp(.5rem,2.5vw,2rem);top:50%;transform:translateY(-50%)}
+  .lb svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  @media (max-width:600px){
+    .lb .prev,.lb .next{top:auto;bottom:clamp(.8rem,4vw,1.5rem);transform:none}
+    .lb img{max-height:64vh}
+  }
 
   /* parents */
   .parents{background:var(--nacre)}
@@ -401,14 +463,8 @@
   <div class="wrap">
     <p class="eyebrow">In our own words and pictures</p>
     <h2 class="sectitle">What a gathering looks like.</h2>
-    <div class="grid-shots">
-      <div class="shot"><span>Monthly picnic</span></div>
-      <div class="shot"><span>INSPIRE HER conference</span></div>
-      <div class="shot"><span>Skills acquisition session</span></div>
-      <div class="shot"><span>School outreach</span></div>
-      <div class="shot"><span>Bible study</span></div>
-      <div class="shot"><span>Pearl of the Year</span></div>
-    </div>
+    <div class="grid-shots" id="stacks"></div>
+    <p class="note" style="margin-top:2rem;font-size:.9rem;opacity:.6;max-width:58ch">Photographs are shared only with the written consent of a girl's parent or carer.</p>
   </div>
 </section>
 
@@ -475,6 +531,16 @@
   </div>
 </footer>
 
+<div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="Photographs">
+  <button class="close" id="lbClose" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <button class="prev" id="lbPrev" aria-label="Previous"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <button class="next" id="lbNext" aria-label="Next"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+  <figure>
+    <div id="lbStage"></div>
+    <figcaption><b id="lbTitle"></b><span id="lbCount"></span></figcaption>
+  </figure>
+</div>
+
 <button id="toTop" aria-label="Back to top" title="Back to top">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
@@ -494,6 +560,145 @@
       window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'});
     });
   })();
+</script>
+
+<script>
+/* ============================================================
+   GALLERY
+   To add photographs: drop the image files into the same folder
+   as this page, then list their filenames below. Each category
+   can hold any number of images. Leave a list empty and the
+   stack simply shows as awaiting photographs.
+   ============================================================ */
+const GALLERY = [
+  { title: "Monthly picnic",          photos: [] },
+  { title: "INSPIRE HER conference",  photos: [] },
+  { title: "Skills acquisition",      photos: [] },
+  { title: "School outreach",         photos: [] },
+  { title: "Bible study",             photos: [] },
+  { title: "Pearl of the Year",       photos: [] }
+];
+/* Example once you have pictures:
+   { title: "Monthly picnic", photos: ["picnic-1.jpg", "picnic-2.jpg", "picnic-3.jpg"] },
+*/
+
+(function(){
+  const grid   = document.getElementById('stacks');
+  const lb     = document.getElementById('lightbox');
+  const stage  = document.getElementById('lbStage');
+  const titleEl= document.getElementById('lbTitle');
+  const countEl= document.getElementById('lbCount');
+  if (!grid) return;
+
+  let album = [], index = 0, opener = null;
+
+  // Build a stack for each category
+  GALLERY.forEach((cat, ci) => {
+    const btn = document.createElement('button');
+    btn.className = 'stack';
+    btn.type = 'button';
+    const n = cat.photos.length;
+    btn.setAttribute('aria-label',
+      n ? cat.title + ', ' + n + ' photograph' + (n === 1 ? '' : 's') + ', open gallery'
+        : cat.title + ', photographs coming soon');
+
+    const deck = document.createElement('div');
+    deck.className = 'deck';
+
+    // three layers, filled with the first images available
+    for (let layer = 0; layer < 3; layer++){
+      const card = document.createElement('div');
+      card.className = 'card';
+      const src = cat.photos[Math.min(layer, n - 1)];
+      if (src){
+        const img = document.createElement('img');
+        img.src = src; img.alt = ''; img.loading = 'lazy';
+        card.appendChild(img);
+      } else if (layer === 2){
+        const e = document.createElement('span');
+        e.className = 'empty';
+        e.textContent = 'Photographs coming soon';
+        card.appendChild(e);
+      }
+      deck.appendChild(card);
+    }
+
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    const h3 = document.createElement('h3');
+    h3.textContent = cat.title;
+    const c = document.createElement('span');
+    c.className = 'count';
+    c.textContent = n ? n + (n === 1 ? ' photo' : ' photos') : '';
+    meta.appendChild(h3); meta.appendChild(c);
+
+    btn.appendChild(deck); btn.appendChild(meta);
+    btn.addEventListener('click', () => open(ci, btn));
+    grid.appendChild(btn);
+  });
+
+  function render(){
+    stage.innerHTML = '';
+    const cat = GALLERY[album];
+    if (cat.photos.length){
+      const img = document.createElement('img');
+      img.src = cat.photos[index];
+      img.alt = cat.title + ', photograph ' + (index + 1);
+      stage.appendChild(img);
+      countEl.textContent = (index + 1) + ' of ' + cat.photos.length;
+    } else {
+      const ph = document.createElement('div');
+      ph.className = 'placeholder';
+      ph.textContent = 'Photographs coming soon';
+      stage.appendChild(ph);
+      countEl.textContent = '';
+    }
+    titleEl.textContent = cat.title;
+    const many = cat.photos.length > 1;
+    document.getElementById('lbPrev').style.display = many ? '' : 'none';
+    document.getElementById('lbNext').style.display = many ? '' : 'none';
+  }
+
+  function open(ci, from){
+    album = ci; index = 0; opener = from;
+    render();
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('lbClose').focus();
+  }
+  function close(){
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+    if (opener) opener.focus();
+  }
+  function step(d){
+    const n = GALLERY[album].photos.length;
+    if (n < 2) return;
+    index = (index + d + n) % n;
+    render();
+  }
+
+  document.getElementById('lbClose').addEventListener('click', close);
+  document.getElementById('lbPrev').addEventListener('click', () => step(-1));
+  document.getElementById('lbNext').addEventListener('click', () => step(1));
+  lb.addEventListener('click', e => { if (e.target === lb) close(); });
+  document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'ArrowRight') step(1);
+  });
+
+  // swipe on touch devices
+  let x0 = null;
+  lb.addEventListener('touchstart', e => { x0 = e.changedTouches[0].clientX; }, {passive:true});
+  lb.addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 45) step(dx < 0 ? 1 : -1);
+    x0 = null;
+  }, {passive:true});
+})();
 </script>
 
 <script>
