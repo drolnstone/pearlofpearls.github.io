@@ -246,6 +246,34 @@
     .lb img{max-height:64vh}
   }
 
+  /* people */
+  .people{background:var(--nacre);border-bottom:1px solid var(--line)}
+  .folk{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:clamp(2rem,4vw,3.2rem);margin-top:3rem}
+  .person{display:flex;flex-direction:column;gap:1.2rem}
+  .portrait{
+    position:relative;aspect-ratio:4/5;overflow:hidden;
+    background:linear-gradient(150deg,#24406E 0%,#0E1E38 100%);
+    border:1px solid var(--line);
+  }
+  .portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%}
+  .portrait .monogram{
+    position:absolute;inset:0;display:grid;place-items:center;
+    font-family:'Fraunces',serif;font-size:3.2rem;color:var(--nacre);opacity:.9;letter-spacing:.04em
+  }
+  .person h3{font-size:1.35rem}
+  .person .role{
+    font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--drop);font-weight:600;margin:.5rem 0 .9rem
+  }
+  .person p{font-size:.96rem;opacity:.85;margin:0 0 .9em}
+  .person blockquote{
+    margin:.4rem 0 0;padding-left:1.1rem;border-left:2px solid var(--drop);
+    font-family:'Fraunces',serif;font-style:italic;font-size:1.02rem;opacity:.92
+  }
+  .person .await{
+    font-size:.88rem;opacity:.6;font-style:italic
+  }
+
   /* parents */
   .parents{background:var(--nacre)}
   .qa{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2.2rem;margin-top:2.6rem}
@@ -332,6 +360,7 @@
         <a href="#story">Story</a>
         <a href="#doing">What we do</a>
         <a href="#inspireher">INSPIRE HER</a>
+        <a href="#people">Who we are</a>
         <a href="#parents">For parents</a>
         <a href="#contact">Contact</a>
       </nav>
@@ -465,6 +494,41 @@
     <h2 class="sectitle">What a gathering looks like.</h2>
     <div class="grid-shots" id="stacks"></div>
     <p class="note" style="margin-top:2rem;font-size:.9rem;opacity:.6;max-width:58ch">Photographs are shared only with the written consent of a girl's parent or carer.</p>
+  </div>
+</section>
+
+<section class="people" id="people">
+  <div class="wrap">
+    <p class="eyebrow">The people behind Pearl of Pearls</p>
+    <h2 class="sectitle">Who you will meet.</h2>
+    <div class="folk">
+
+      <div class="person">
+        <div class="portrait">
+          <span class="monogram">NO</span>
+        </div>
+        <div>
+          <h3>Dr Nnyen Okorn</h3>
+          <p class="role">Founder &middot; Liverpool</p>
+          <p>Dr Nnyen founded Pearl of Pearls in Calabar in 2015, out of a concern that too many teenage girls were growing up without an older woman to talk to about the things that shape them. Ten years on, the movement she began has reached over a thousand young people across three branches.</p>
+          <p>She is a doctor by profession and leads the Liverpool branch, which began meeting in her own living room in 2024.</p>
+          <blockquote>Every girl is a pearl of great worth. She only needs someone to help her see it.</blockquote>
+        </div>
+      </div>
+
+      <div class="person">
+        <div class="portrait">
+          <span class="monogram">AB</span>
+        </div>
+        <div>
+          <h3>Dr Ami Brighton</h3>
+          <p class="role">Founding trustee &middot; Nigeria</p>
+          <p>Dr Ami has been a trustee of Pearl of Pearls since its founding in 2015. In 2018 she initiated the Port Harcourt branch and has coordinated it ever since, carrying the same programme of mentoring, prayer, skills training and outreach.</p>
+          <p class="await">A fuller profile will follow.</p>
+        </div>
+      </div>
+
+    </div>
   </div>
 </section>
 
