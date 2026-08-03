@@ -328,7 +328,7 @@
   }
 
   /* parents */
-  .parents{background:var(--nacre)}
+  .parents{background:var(--paper);border-bottom:1px solid var(--line)}
   .qa{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2.2rem;margin-top:2.6rem}
   .qa h3{font-size:1.08rem;margin-bottom:.5rem}
   .qa p{font-size:.96rem;opacity:.82;margin:0}
@@ -410,10 +410,10 @@
     <div class="heronav">
       <span class="mark">Pearl of Pearls</span>
       <nav>
+        <a href="#who">Who it's for</a>
         <a href="#story">Story</a>
         <a href="#doing">What we do</a>
         <a href="#whatson">What's on</a>
-        <a href="#inspireher">INSPIRE HER</a>
         <a href="#people">Who we are</a>
         <a href="#parents">For parents</a>
         <a href="#contact">Contact</a>
@@ -440,6 +440,24 @@
     </div>
   </div>
 </header>
+
+<section class="who" id="who">
+  <div class="wrap two">
+    <div>
+      <p class="eyebrow">Who we are for</p>
+      <h2 class="sectitle">The holistic care of the girl child.</h2>
+    </div>
+    <div>
+      <p>We are here for girls in their teenage years, roughly 12 to 19: the age when a young woman is deciding what she is worth, and often deciding it on somebody else's terms. Younger sisters who come along with them are welcome too.</p>
+      <p>Our aim is that she is inspired, groomed and equipped to reach her own dreams, and that she grows into a woman who lives with confidence and security wherever she finds herself.</p>
+      <div class="vals">
+        <div class="val"><h3>Inspire</h3><p>To lift her sights beyond mediocrity and show her what is possible.</p></div>
+        <div class="val"><h3>Encourage</h3><p>To give her the boldness to face the challenges that threaten the girl child.</p></div>
+        <div class="val"><h3>Equip</h3><p>To hand her knowledge and skills she can use in every sphere of life.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section class="story" id="story">
   <div class="wrap two">
@@ -481,60 +499,6 @@
   </div>
 </section>
 
-<section class="whatson" id="whatson">
-  <div class="wrap">
-    <p class="eyebrow">What's on</p>
-    <h2 class="sectitle">Come to the next one.</h2>
-    <div class="tabs" id="branchTabs" role="tablist" aria-label="Choose a branch"></div>
-    <p class="branchline" id="branchLine"></p>
-    <div id="branchAnnounce"></div>
-    <div class="diary" id="diary"></div>
-    <p class="aside">Dates are added here as they are confirmed. If you would like to bring your daughter to any of these, or simply come and look first, write to us at <a href="mailto:info@pearlofpearls.org">info@pearlofpearls.org</a> and we will send you the details.</p>
-  </div>
-</section>
-
-<section class="who">
-  <div class="wrap two">
-    <div>
-      <p class="eyebrow">Who we are for</p>
-      <h2 class="sectitle">The holistic care of the girl child.</h2>
-    </div>
-    <div>
-      <p>We are here for girls in their teenage years, roughly 12 to 19: the age when a young woman is deciding what she is worth, and often deciding it on somebody else's terms. Younger sisters who come along with them are welcome too.</p>
-      <p>Our aim is that she is inspired, groomed and equipped to reach her own dreams, and that she grows into a woman who lives with confidence and security wherever she finds herself.</p>
-      <div class="vals">
-        <div class="val"><h3>Inspire</h3><p>To lift her sights beyond mediocrity and show her what is possible.</p></div>
-        <div class="val"><h3>Encourage</h3><p>To give her the boldness to face the challenges that threaten the girl child.</p></div>
-        <div class="val"><h3>Equip</h3><p>To hand her knowledge and skills she can use in every sphere of life.</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="branches" id="branches">
-  <div class="wrap">
-    <p class="eyebrow">One movement, one source</p>
-    <h2 class="sectitle">Three branches, the same vision.</h2>
-    <div class="brow">
-      <div class="branch">
-        <h3>Calabar</h3>
-        <p class="since">Nigeria &middot; since 2015</p>
-        <p>Where Pearl of Pearls began, and where the annual anniversary is still marked each April.</p>
-      </div>
-      <div class="branch">
-        <h3>Port Harcourt</h3>
-        <p class="since">Nigeria &middot; since 2018</p>
-        <p>Our second branch, carrying the same programme of mentoring, prayer and outreach.</p>
-      </div>
-      <div class="branch">
-        <h3>Liverpool</h3>
-        <p class="since">United Kingdom &middot; since 2024</p>
-        <p>Our newest branch, currently gathering girls through picnics, hangouts and Bible study.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section class="inspire" id="inspireher">
   <div class="wrap two">
     <div>
@@ -554,12 +518,15 @@
   </div>
 </section>
 
-<section class="gallery" id="gallery">
+<section class="whatson" id="whatson">
   <div class="wrap">
-    <p class="eyebrow">In our own words and pictures</p>
-    <h2 class="sectitle">What a gathering looks like.</h2>
-    <div class="grid-shots" id="stacks"></div>
-    <p class="note" style="margin-top:2rem;font-size:.9rem;opacity:.6;max-width:58ch">Photographs are shared only with the written consent of a girl's parent or carer.</p>
+    <p class="eyebrow">What's on</p>
+    <h2 class="sectitle">Come to the next one.</h2>
+    <div class="tabs" id="branchTabs" role="tablist" aria-label="Choose a branch"></div>
+    <p class="branchline" id="branchLine"></p>
+    <div id="branchAnnounce"></div>
+    <div class="diary" id="diary"></div>
+    <p class="aside">Dates are added here as they are confirmed. If you would like to bring your daughter to any of these, or simply come and look first, write to us at <a href="mailto:info@pearlofpearls.org">info@pearlofpearls.org</a> and we will send you the details.</p>
   </div>
 </section>
 
@@ -629,6 +596,39 @@
       <div>
         <h3>Can I stay or visit first?</h3>
         <p>Yes, and we would rather you did. Come and see for yourself, meet the mentors, and decide afterwards.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="gallery" id="gallery">
+  <div class="wrap">
+    <p class="eyebrow">In our own words and pictures</p>
+    <h2 class="sectitle">What a gathering looks like.</h2>
+    <div class="grid-shots" id="stacks"></div>
+    <p class="note" style="margin-top:2rem;font-size:.9rem;opacity:.6;max-width:58ch">Photographs are shared only with the written consent of a girl's parent or carer.</p>
+  </div>
+</section>
+
+<section class="branches" id="branches">
+  <div class="wrap">
+    <p class="eyebrow">One movement, one source</p>
+    <h2 class="sectitle">Three branches, the same vision.</h2>
+    <div class="brow">
+      <div class="branch">
+        <h3>Calabar</h3>
+        <p class="since">Nigeria &middot; since 2015</p>
+        <p>Where Pearl of Pearls began, and where the annual anniversary is still marked each April.</p>
+      </div>
+      <div class="branch">
+        <h3>Port Harcourt</h3>
+        <p class="since">Nigeria &middot; since 2018</p>
+        <p>Our second branch, carrying the same programme of mentoring, prayer and outreach.</p>
+      </div>
+      <div class="branch">
+        <h3>Liverpool</h3>
+        <p class="since">United Kingdom &middot; since 2024</p>
+        <p>Our newest branch, currently gathering girls through picnics, hangouts and Bible study.</p>
       </div>
     </div>
   </div>
