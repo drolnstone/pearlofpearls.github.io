@@ -133,6 +133,28 @@
   .act .dot{width:9px;height:9px;border-radius:50%;background:var(--drop);display:block;margin-bottom:1rem}
   .doing .note{margin-top:2rem;font-size:.95rem;color:rgba(243,239,245,.62);max-width:60ch}
 
+  /* branch tabs */
+  .tabs{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:2.2rem}
+  .tabs button{
+    appearance:none;cursor:pointer;font:inherit;
+    font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+    padding:.65rem 1.3rem;border:1px solid var(--line);background:transparent;color:var(--ink);
+    transition:background .2s,color .2s,border-color .2s;
+  }
+  .tabs button:hover{border-color:var(--ink)}
+  .tabs button[aria-selected="true"]{background:var(--ink);color:var(--nacre);border-color:var(--ink)}
+  .branchline{
+    margin-top:1.6rem;font-size:.92rem;opacity:.7
+  }
+  .announce{
+    margin-top:1.4rem;padding:1.1rem 1.3rem;
+    background:var(--nacre);border-left:3px solid var(--drop);
+    font-size:.95rem
+  }
+  .announce b{
+    display:block;font-family:'Fraunces',serif;font-size:1.05rem;font-weight:500;margin-bottom:.3rem
+  }
+
   /* what's on */
   .whatson{background:var(--paper);border-bottom:1px solid var(--line)}
   .diary{margin-top:2.8rem;display:grid;gap:0}
@@ -448,7 +470,7 @@
       <div class="act"><span class="dot"></span><h3>Monthly picnic</h3><p>Pearls gather to learn, talk honestly and think together about the things that affect a girl's life.</p></div>
       <div class="act"><span class="dot"></span><h3>INSPIRE HER</h3><p>Our woman to woman mentorship conference, bridging the gap between generations of women.</p></div>
       <div class="act"><span class="dot"></span><h3>Bible studies</h3><p>Time in God's presence, looking through scripture and drawing lessons for real living.</p></div>
-      <div class="act"><span class="dot"></span><h3>Daughters of Anna</h3><p>A weekly prayer meeting: deep fellowship and intercession for the girls and their families.</p></div>
+      <div class="act"><span class="dot"></span><h3>Daughters of Anna</h3><p>Our prayer meeting: deep fellowship and intercession for the girls and their families.</p></div>
       <div class="act"><span class="dot"></span><h3>Skills acquisition</h3><p>Practical, lucrative skills taught during picnics and conferences, open to every participant.</p></div>
       <div class="act"><span class="dot"></span><h3>Ladies' weekend hangout</h3><p>Unhurried time together, where mentoring happens through friendship rather than a programme.</p></div>
       <div class="act"><span class="dot"></span><h3>Outreaches</h3><p>School visits with educational materials, and free medical outreaches to those who need them.</p></div>
@@ -463,6 +485,9 @@
   <div class="wrap">
     <p class="eyebrow">What's on</p>
     <h2 class="sectitle">Come to the next one.</h2>
+    <div class="tabs" id="branchTabs" role="tablist" aria-label="Choose a branch"></div>
+    <p class="branchline" id="branchLine"></p>
+    <div id="branchAnnounce"></div>
     <div class="diary" id="diary"></div>
     <p class="aside">Dates are added here as they are confirmed. If you would like to bring your daughter to any of these, or simply come and look first, write to us at <a href="mailto:info@pearlofpearls.org">info@pearlofpearls.org</a> and we will send you the details.</p>
   </div>
@@ -626,7 +651,8 @@
 
 <footer>
   <div class="wrap">
-    <span>Pearl of Pearls &middot; Liverpool, United Kingdom</span>
+    <span>Pearl of Pearls &middot; Liverpool, United Kingdom<br>
+      <small style="opacity:.7">Pearl of Pearls is a charity constituted in England and Wales. Our Calabar and Port Harcourt branches are separately governed under the law of Nigeria.</small></span>
     <span>
       <a href="mailto:info@pearlofpearls.org">info@pearlofpearls.org</a>
       &nbsp;&middot;&nbsp;
@@ -671,76 +697,199 @@
 <script>
 /* ============================================================
    WHAT'S ON
-   Add or edit dates below. Use the format YYYY-MM-DD.
-   Past events disappear from the page automatically, so old
-   dates can simply be left in the list or deleted at leisure.
+
+   One diary per branch. To edit a branch, change its entry in
+   BRANCHES below.
+     recurring : the regular monthly pattern, generated
+                 automatically (weekday: 0 = Sun ... 6 = Sat)
+     events    : one-off dates, format YYYY-MM-DD. A one-off on
+                 the same day as a recurring date replaces it.
+     announce  : optional. Something confirmed in principle but
+                 not yet dated. Delete it once a date is set.
+   Past dates disappear from the page by themselves.
    ============================================================ */
-const EVENTS = [
+
+const BRANCHES = [
   {
-    date: "2026-08-08",
-    title: "INSPIRE HER Summer Picnic",
-    detail: "Saturday, 3.00pm \u00b7 South Park, Balliol Road, L20 3AB (adjacent to the basketball court)",
-    note: "Theme: The Supernatural Tribe. A woman to woman mentorship picnic bridging the generations. Wholesome conversation, games, food and music. Women and girls of all ages are welcome. Free to attend.",
-    tag: "This week"
+    id: "liverpool",
+    name: "Liverpool",
+    line: "Liverpool, United Kingdom. Gathering since 2024.",
+    recurring: [
+      {
+        nth: 2, weekday: 6,
+        title: "Monthly gathering",
+        detail: "Second Saturday of the month, 12 noon \u00b7 Liverpool",
+        note: "Open conversation about the things that affect a girl's life, thought through together in the light of Scripture."
+      },
+      {
+        nth: 3, weekday: 6,
+        title: "Daughters of Anna",
+        detail: "Third Saturday of the month, 12 noon \u00b7 Liverpool",
+        note: "Our prayer meeting: a time to carry on the conversations we did not finish, to pray together and to build one another up."
+      }
+    ],
+    events: [
+      {
+        date: "2026-08-08",
+        title: "INSPIRE HER Summer Picnic",
+        detail: "Saturday, 3.00pm \u00b7 South Park, Balliol Road, L20 3AB (adjacent to the basketball court)",
+        note: "Theme: The Supernatural Tribe. A woman to woman mentorship picnic bridging the generations. Wholesome conversation, games, food and music. Women and girls of all ages are welcome. Free to attend.",
+        tag: "This week"
+      }
+    ]
   },
-  // Add further dates here, for example:
-  // { date: "2026-09-12", title: "Monthly picnic", detail: "2pm to 4pm, Liverpool", note: "Bring a friend. Refreshments provided.", tag: "" },
+  {
+    id: "portharcourt",
+    name: "Port Harcourt",
+    line: "Port Harcourt, Nigeria. Our second branch, since 2018.",
+    recurring: [],
+    events: [
+      {
+        date: "2026-08-15",
+        title: "INSPIRE HER Conference 2026",
+        detail: "Saturday, 10.00am \u00b7 RCCG Strong Tower Parish, Aeroplane Drive, off Abuloma, Port Harcourt",
+        note: "Theme: The Supernatural Tribe (Luke 1:37,45; Job 22:28). A woman to woman mentorship conference with Dr Vera Otamiri, Pst Samuel Isuku, Mrs Tuoyo Oyeniyi and Dr Edith Reuben, and music from Minister Gift Alika. Worship, the Word, mentorship, free medical services, dance and skill acquisition. Enquiries: 0813 269 8404.",
+        tag: "This month"
+      }
+    ]
+  },
+  {
+    id: "calabar",
+    name: "Calabar",
+    line: "Calabar, Nigeria. Where Pearl of Pearls began in 2015.",
+    announce: {
+      title: "INSPIRE HER Conference 2026 \u00b7 The Supernatural Tribe",
+      text: "Calabar joins the movement's conference on the same theme, expected in September. Speakers and venue are being confirmed, and the date will appear here as soon as it is settled. Write to us if you would like to be told when it is announced."
+    },
+    recurring: [],
+    events: []
+  }
 ];
 
+const MONTHS_AHEAD = 4;   // how far forward to list the regular dates
+
 (function(){
-  const box = document.getElementById('diary');
-  if (!box) return;
+  const box   = document.getElementById('diary');
+  const tabs  = document.getElementById('branchTabs');
+  const line  = document.getElementById('branchLine');
+  if (!box || !tabs) return;
 
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   const today = new Date(); today.setHours(0,0,0,0);
+  const iso = d => d.getFullYear() + '-' +
+                   String(d.getMonth()+1).padStart(2,'0') + '-' +
+                   String(d.getDate()).padStart(2,'0');
 
-  const upcoming = EVENTS
-    .filter(e => { const d = new Date(e.date + "T00:00:00"); return !isNaN(d) && d >= today; })
-    .sort((a,b) => a.date < b.date ? -1 : 1);
-
-  if (!upcoming.length){
-    const p = document.createElement('p');
-    p.className = 'none';
-    p.textContent = 'No dates are confirmed just yet. Write to us and we will let you know as soon as the next gathering is arranged.';
-    box.appendChild(p);
-    return;
+  function nthWeekdayOfMonth(year, month, weekday, n){
+    const first = new Date(year, month, 1);
+    const offset = (weekday - first.getDay() + 7) % 7;
+    return new Date(year, month, 1 + offset + (n - 1) * 7);
   }
 
-  upcoming.forEach(e => {
-    const d = new Date(e.date + "T00:00:00");
-    const row = document.createElement('div');
-    row.className = 'ev';
+  function diaryFor(branch){
+    const taken = new Set((branch.events || []).map(e => e.date));
+    const list = (branch.events || []).slice();
 
-    const when = document.createElement('div');
-    when.className = 'when';
-    when.innerHTML = '<span class="d"></span><span class="m"></span>';
-    when.querySelector('.d').textContent = d.getDate();
-    when.querySelector('.m').textContent = months[d.getMonth()];
-
-    const body = document.createElement('div');
-    const h3 = document.createElement('h3');
-    h3.textContent = e.title;
-    body.appendChild(h3);
-    if (e.detail){
-      const det = document.createElement('p');
-      det.className = 'detail';
-      det.textContent = e.detail;
-      body.appendChild(det);
-    }
-    if (e.note){
-      const n = document.createElement('p');
-      n.className = 'note';
-      n.textContent = e.note;
-      body.appendChild(n);
+    for (let i = 0; i < MONTHS_AHEAD; i++){
+      const cursor = new Date(today.getFullYear(), today.getMonth() + i, 1);
+      (branch.recurring || []).forEach(r => {
+        const d = nthWeekdayOfMonth(cursor.getFullYear(), cursor.getMonth(), r.weekday, r.nth);
+        const key = iso(d);
+        if (d >= today && !taken.has(key)){
+          taken.add(key);
+          list.push({ date: key, title: r.title, detail: r.detail, note: r.note, tag: "" });
+        }
+      });
     }
 
-    const tag = document.createElement('span');
-    tag.className = 'tag';
-    tag.textContent = e.tag || '';
+    return list
+      .filter(e => { const d = new Date(e.date + "T00:00:00"); return !isNaN(d) && d >= today; })
+      .sort((a,b) => a.date < b.date ? -1 : 1);
+  }
 
-    row.appendChild(when); row.appendChild(body); row.appendChild(tag);
-    box.appendChild(row);
+  function render(branch){
+    box.innerHTML = '';
+    line.textContent = branch.line || '';
+
+    const ann = document.getElementById('branchAnnounce');
+    ann.innerHTML = '';
+    if (branch.announce){
+      const d = document.createElement('div');
+      d.className = 'announce';
+      const b = document.createElement('b');
+      b.textContent = branch.announce.title;
+      const t = document.createElement('span');
+      t.textContent = branch.announce.text;
+      d.appendChild(b); d.appendChild(t);
+      ann.appendChild(d);
+    }
+
+    const upcoming = diaryFor(branch);
+
+    if (!upcoming.length){
+      const p = document.createElement('p');
+      p.className = 'none';
+      p.textContent = branch.announce
+        ? 'No further dates are confirmed for this branch just yet.'
+        : 'No dates are listed for this branch just yet. Write to us and we will put you in touch with the team there.';
+      box.appendChild(p);
+      return;
+    }
+
+    upcoming.forEach(e => {
+      const d = new Date(e.date + "T00:00:00");
+      const row = document.createElement('div');
+      row.className = 'ev';
+
+      const when = document.createElement('div');
+      when.className = 'when';
+      when.innerHTML = '<span class="d"></span><span class="m"></span>';
+      when.querySelector('.d').textContent = d.getDate();
+      when.querySelector('.m').textContent = months[d.getMonth()];
+
+      const body = document.createElement('div');
+      const h3 = document.createElement('h3');
+      h3.textContent = e.title;
+      body.appendChild(h3);
+      if (e.detail){
+        const det = document.createElement('p');
+        det.className = 'detail';
+        det.textContent = e.detail;
+        body.appendChild(det);
+      }
+      if (e.note){
+        const n = document.createElement('p');
+        n.className = 'note';
+        n.textContent = e.note;
+        body.appendChild(n);
+      }
+
+      const tag = document.createElement('span');
+      tag.className = 'tag';
+      tag.textContent = e.tag || '';
+
+      row.appendChild(when); row.appendChild(body); row.appendChild(tag);
+      box.appendChild(row);
+    });
+  }
+
+  const buttons = BRANCHES.map((b, i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.setAttribute('role','tab');
+    btn.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+    btn.textContent = b.name;
+    btn.addEventListener('click', () => select(i));
+    tabs.appendChild(btn);
+    return btn;
   });
+
+  function select(i){
+    buttons.forEach((btn, j) => btn.setAttribute('aria-selected', i === j ? 'true' : 'false'));
+    render(BRANCHES[i]);
+  }
+
+  select(0);
 })();
 </script>
 
