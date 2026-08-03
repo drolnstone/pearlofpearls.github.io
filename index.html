@@ -133,6 +133,37 @@
   .act .dot{width:9px;height:9px;border-radius:50%;background:var(--drop);display:block;margin-bottom:1rem}
   .doing .note{margin-top:2rem;font-size:.95rem;color:rgba(243,239,245,.62);max-width:60ch}
 
+  /* what's on */
+  .whatson{background:var(--paper);border-bottom:1px solid var(--line)}
+  .diary{margin-top:2.8rem;display:grid;gap:0}
+  .ev{
+    display:grid;grid-template-columns:auto 1fr auto;gap:clamp(1.2rem,3vw,2.4rem);
+    align-items:baseline;padding:1.5rem 0;border-top:1px solid var(--line);
+  }
+  .ev:last-child{border-bottom:1px solid var(--line)}
+  .ev .when{
+    display:flex;flex-direction:column;align-items:center;min-width:64px;
+    padding:.55rem .7rem;background:var(--ink);color:var(--nacre);align-self:flex-start
+  }
+  .ev .when .d{font-family:'Fraunces',serif;font-size:1.55rem;line-height:1}
+  .ev .when .m{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;opacity:.75;margin-top:.25rem}
+  .ev h3{font-size:1.18rem}
+  .ev .detail{font-size:.92rem;opacity:.7;margin:.4rem 0 0}
+  .ev .note{font-size:.94rem;opacity:.85;margin:.6rem 0 0;max-width:56ch}
+  .ev .tag{
+    font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+    color:var(--drop);white-space:nowrap;align-self:flex-start
+  }
+  .diary .none{
+    padding:2rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    font-style:italic;opacity:.65
+  }
+  .whatson .aside{margin-top:2rem;font-size:.94rem;opacity:.75;max-width:60ch}
+  @media (max-width:600px){
+    .ev{grid-template-columns:auto 1fr;gap:1rem}
+    .ev .tag{grid-column:2;margin-top:.5rem}
+  }
+
   /* who */
   .who{border-bottom:1px solid var(--line)}
   .vals{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:2rem;margin-top:2.4rem}
@@ -359,6 +390,7 @@
       <nav>
         <a href="#story">Story</a>
         <a href="#doing">What we do</a>
+        <a href="#whatson">What's on</a>
         <a href="#inspireher">INSPIRE HER</a>
         <a href="#people">Who we are</a>
         <a href="#parents">For parents</a>
@@ -424,6 +456,15 @@
     </div>
 
     <p class="note">Every activity is free. Girls of any background, faith or family circumstance are welcome, and no one is asked to believe anything in order to belong.</p>
+  </div>
+</section>
+
+<section class="whatson" id="whatson">
+  <div class="wrap">
+    <p class="eyebrow">What's on</p>
+    <h2 class="sectitle">Come to the next one.</h2>
+    <div class="diary" id="diary"></div>
+    <p class="aside">Dates are added here as they are confirmed. If you would like to bring your daughter to any of these, or simply come and look first, write to us at <a href="mailto:info@pearlofpearls.org">info@pearlofpearls.org</a> and we will send you the details.</p>
   </div>
 </section>
 
@@ -623,6 +664,75 @@
       window.scrollTo({top:0, behavior: reduce ? 'auto' : 'smooth'});
     });
   })();
+</script>
+
+<script>
+/* ============================================================
+   WHAT'S ON
+   Add or edit dates below. Use the format YYYY-MM-DD.
+   Past events disappear from the page automatically, so old
+   dates can simply be left in the list or deleted at leisure.
+   ============================================================ */
+const EVENTS = [
+  // { date: "2026-09-12", title: "Monthly picnic", detail: "2pm to 4pm, Liverpool", note: "Bring a friend. Refreshments provided.", tag: "" },
+  // { date: "2026-10-03", title: "Skills afternoon", detail: "2pm to 4.30pm, Liverpool", note: "Handcraft session, all materials supplied.", tag: "New" },
+];
+
+(function(){
+  const box = document.getElementById('diary');
+  if (!box) return;
+
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  const upcoming = EVENTS
+    .filter(e => { const d = new Date(e.date + "T00:00:00"); return !isNaN(d) && d >= today; })
+    .sort((a,b) => a.date < b.date ? -1 : 1);
+
+  if (!upcoming.length){
+    const p = document.createElement('p');
+    p.className = 'none';
+    p.textContent = 'No dates are confirmed just yet. Write to us and we will let you know as soon as the next gathering is arranged.';
+    box.appendChild(p);
+    return;
+  }
+
+  upcoming.forEach(e => {
+    const d = new Date(e.date + "T00:00:00");
+    const row = document.createElement('div');
+    row.className = 'ev';
+
+    const when = document.createElement('div');
+    when.className = 'when';
+    when.innerHTML = '<span class="d"></span><span class="m"></span>';
+    when.querySelector('.d').textContent = d.getDate();
+    when.querySelector('.m').textContent = months[d.getMonth()];
+
+    const body = document.createElement('div');
+    const h3 = document.createElement('h3');
+    h3.textContent = e.title;
+    body.appendChild(h3);
+    if (e.detail){
+      const det = document.createElement('p');
+      det.className = 'detail';
+      det.textContent = e.detail;
+      body.appendChild(det);
+    }
+    if (e.note){
+      const n = document.createElement('p');
+      n.className = 'note';
+      n.textContent = e.note;
+      body.appendChild(n);
+    }
+
+    const tag = document.createElement('span');
+    tag.className = 'tag';
+    tag.textContent = e.tag || '';
+
+    row.appendChild(when); row.appendChild(body); row.appendChild(tag);
+    box.appendChild(row);
+  });
+})();
 </script>
 
 <script>
