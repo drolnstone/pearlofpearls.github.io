@@ -299,6 +299,27 @@
     .lb img{max-height:64vh}
   }
 
+  /* support */
+  .support{background:var(--nacre);border-bottom:1px solid var(--line)}
+  .support .sectitle{max-width:22ch}
+  .give{
+    margin-top:1.8rem;padding:1.6rem 1.7rem;background:var(--paper);
+    border:1px solid var(--line);border-top:3px solid var(--drop);max-width:640px
+  }
+  .give h3{font-size:1.15rem;margin-bottom:.2rem}
+  .give .entity{
+    font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+    opacity:.6;margin:0 0 1.1rem
+  }
+  .give dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.55rem 1.4rem;font-size:.96rem}
+  .give dt{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;opacity:.55;padding-top:.15rem}
+  .give dd{margin:0;font-weight:500}
+  .give .num{font-family:'Fraunces',serif;font-size:1.1rem;letter-spacing:.04em}
+  .give .pending{font-style:italic;opacity:.7;font-weight:400}
+  .support .smallprint{
+    margin-top:2rem;font-size:.88rem;opacity:.65;max-width:62ch
+  }
+
   /* people */
   .people{background:var(--nacre);border-bottom:1px solid var(--line)}
   .folk{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:clamp(2rem,4vw,3.2rem);margin-top:3rem}
@@ -414,6 +435,7 @@
         <a href="#story">Story</a>
         <a href="#doing">What we do</a>
         <a href="#whatson">What's on</a>
+        <a href="#support">Partner</a>
         <a href="#people">Who we are</a>
         <a href="#parents">For parents</a>
         <a href="#contact">Contact</a>
@@ -527,6 +549,17 @@
     <div id="branchAnnounce"></div>
     <div class="diary" id="diary"></div>
     <p class="aside">Dates are added here as they are confirmed. If you would like to bring your daughter to any of these, or simply come and look first, write to us at <a href="mailto:info@pearlofpearls.org">info@pearlofpearls.org</a> and we will send you the details.</p>
+  </div>
+</section>
+
+<section class="support" id="support">
+  <div class="wrap">
+    <p class="eyebrow">Partner with us</p>
+    <h2 class="sectitle">Support the work where it happens.</h2>
+    <p style="max-width:58ch">Our work is carried by two separate bodies, each funded and accounted for under the law of its own country. Choose where you would like your gift to go, and give to it directly.</p>
+    <div class="tabs" id="giveTabs" role="tablist" aria-label="Choose where to give"></div>
+    <div id="givePanel"></div>
+    <p class="smallprint">Gifts to the Nigerian branches are received by Pearl of Pearls Nigeria and do not pass through the charity registered in England and Wales. Gifts to the Liverpool branch are received by the charity in England and Wales and are applied solely to its charitable purposes. We accept no anonymous donations, and the trustees consider the source of every gift before accepting it.</p>
   </div>
 </section>
 
@@ -701,8 +734,10 @@
 
    One diary per branch. To edit a branch, change its entry in
    BRANCHES below.
-     recurring : the regular monthly pattern, generated
-                 automatically (weekday: 0 = Sun ... 6 = Sat)
+     recurring : the regular pattern, generated automatically.
+                 Monthly: { nth: 2, weekday: 6 }
+                 Weekly:  { every: "week", weekday: 3, limit: 6 }
+                 weekday: 0 = Sun, 1 = Mon ... 6 = Sat
      events    : one-off dates, format YYYY-MM-DD. A one-off on
                  the same day as a recurring date replaces it.
      announce  : optional. Something confirmed in principle but
@@ -785,10 +820,41 @@ const BRANCHES = [
     line: "Calabar, Nigeria. Where Pearl of Pearls began in 2015.",
     announce: {
       title: "INSPIRE HER Conference 2026 \u00b7 The Supernatural Tribe",
-      text: "Calabar joins the movement's conference on the same theme, expected in September. Speakers and venue are being confirmed, and the date will appear here as soon as it is settled. Write to us if you would like to be told when it is announced."
+      text: "Calabar joins the movement's conference on the same theme, expected on the first weekend of September. Speakers and venue are being confirmed, and the date will appear here as soon as it is settled. Write to us if you would like to be told when it is announced."
     },
-    recurring: [],
+    recurring: [
+      {
+        every: "week", weekday: 3, limit: 6,
+        title: "Daughters of Anna",
+        detail: "Every Wednesday, 7.00pm \u00b7 online, by WhatsApp group call",
+        note: "A weekly prayer meeting open to females of all ages, grown out of many years of INSPIRE HER conferences. Girls, students, mothers and grandmothers pray together, joining online from wherever they are."
+      }
+    ],
     events: []
+  }
+];
+
+/* ------------------------------------------------------------
+   PARTNER WITH US
+   Two entities, not three branches: the Nigerian branches share
+   one account. Fill in the UK block once the account is open,
+   replacing "pending" with name / account / sortcode.
+   ------------------------------------------------------------ */
+const GIVING = [
+  {
+    name: "United Kingdom",
+    entity: "Received by Pearl of Pearls, a charity constituted in England and Wales",
+    pending: "Our United Kingdom bank account is being opened and the details will appear here as soon as it is live. In the meantime, please write to info@pearlofpearls.org and we will be glad to talk with you.",
+    covers: "Supports the Liverpool branch."
+  },
+  {
+    name: "Nigeria",
+    entity: "Received by Pearl of Pearls Nigeria, constituted under the law of the Federal Republic of Nigeria",
+    accountName: "Pearl of Pearls",
+    account: "5700111822",
+    bank: "Fidelity Bank",
+    contacts: "+234 (0)813 269 8404, +234 (0)814 067 6676",
+    covers: "Supports the Calabar and Port Harcourt branches, which share one account."
   }
 ];
 
@@ -816,9 +882,25 @@ const MONTHS_AHEAD = 4;   // how far forward to list the regular dates
     const taken = new Set((branch.events || []).map(e => e.date));
     const list = (branch.events || []).slice();
 
+    // weekly patterns: the next few occurrences
+    (branch.recurring || []).filter(r => r.every === "week").forEach(r => {
+      const d = new Date(today);
+      d.setDate(d.getDate() + ((r.weekday - d.getDay() + 7) % 7));
+      const limit = r.limit || 6;
+      for (let n = 0; n < limit; n++){
+        const key = iso(d);
+        if (!taken.has(key)){
+          taken.add(key);
+          list.push({ date: key, title: r.title, detail: r.detail, note: r.note, tag: "" });
+        }
+        d.setDate(d.getDate() + 7);
+      }
+    });
+
+    // monthly patterns: the nth weekday of each month ahead
     for (let i = 0; i < MONTHS_AHEAD; i++){
       const cursor = new Date(today.getFullYear(), today.getMonth() + i, 1);
-      (branch.recurring || []).forEach(r => {
+      (branch.recurring || []).filter(r => r.every !== "week").forEach(r => {
         const d = nthWeekdayOfMonth(cursor.getFullYear(), cursor.getMonth(), r.weekday, r.nth);
         const key = iso(d);
         if (d >= today && !taken.has(key)){
@@ -916,6 +998,72 @@ const MONTHS_AHEAD = 4;   // how far forward to list the regular dates
   }
 
   select(0);
+
+  /* ---- Partner with us: two entities ---- */
+  const gTabs  = document.getElementById('giveTabs');
+  const gPanel = document.getElementById('givePanel');
+  if (gTabs && gPanel){
+    function renderGiving(g){
+      gPanel.innerHTML = '';
+      const card = document.createElement('div');
+      card.className = 'give';
+
+      const h3 = document.createElement('h3');
+      h3.textContent = g.name;
+      const ent = document.createElement('p');
+      ent.className = 'entity';
+      ent.textContent = g.entity;
+      card.appendChild(h3); card.appendChild(ent);
+
+      if (g.pending){
+        const p = document.createElement('p');
+        p.className = 'pending';
+        p.style.margin = '0';
+        p.textContent = g.pending;
+        card.appendChild(p);
+      } else {
+        const dl = document.createElement('dl');
+        const row = (label, value, big) => {
+          const dt = document.createElement('dt'); dt.textContent = label;
+          const dd = document.createElement('dd'); dd.textContent = value;
+          if (big) dd.className = 'num';
+          dl.appendChild(dt); dl.appendChild(dd);
+        };
+        if (g.accountName) row('Account name', g.accountName);
+        if (g.account)     row('Account number', g.account, true);
+        if (g.sortcode)    row('Sort code', g.sortcode, true);
+        if (g.bank)        row('Bank', g.bank);
+        if (g.contacts)    row('Enquiries', g.contacts);
+        card.appendChild(dl);
+      }
+
+      if (g.covers){
+        const c = document.createElement('p');
+        c.className = 'entity';
+        c.style.margin = '1.2rem 0 0';
+        c.textContent = g.covers;
+        card.appendChild(c);
+      }
+      gPanel.appendChild(card);
+    }
+
+    const gButtons = GIVING.map((g, i) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.setAttribute('role','tab');
+      btn.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+      btn.textContent = g.name;
+      btn.addEventListener('click', () => gSelect(i));
+      gTabs.appendChild(btn);
+      return btn;
+    });
+
+    function gSelect(i){
+      gButtons.forEach((btn, j) => btn.setAttribute('aria-selected', i === j ? 'true' : 'false'));
+      renderGiving(GIVING[i]);
+    }
+    gSelect(0);
+  }
 })();
 </script>
 
