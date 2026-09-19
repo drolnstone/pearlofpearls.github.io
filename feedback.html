@@ -632,15 +632,29 @@ const QUESTIONS = [
     };
   }
 
+  /* The web app answers with JSON: {"ok":true,"row":12}.
+     Anything else -- a 404, an HTML error page, or a script that runs
+     but saves nothing -- counts as a failure here, so the page can
+     never tell someone their answers were received when they were not. */
+  let lastReply = '';
+
   function send(body){
     return fetch(CONFIG.endpoint, {
       method:'POST',
       headers:{'Content-Type':'text/plain;charset=utf-8'},
       body:JSON.stringify(body)
-    }).then(r => {
-      if (!r.ok) throw new Error('rejected');
-      return true;
-    });
+    }).then(r => r.text().then(text => {
+      lastReply = 'HTTP ' + r.status + ' \u00b7 ' + text.slice(0,400);
+      if (!r.ok) throw new Error('The server replied ' + r.status + '.');
+      let out = null;
+      try { out = JSON.parse(text); } catch(err){}
+      if (!out || out.ok !== true){
+        throw new Error(out && out.error
+          ? out.error
+          : 'The server replied, but did not confirm a row was saved.');
+      }
+      return out;
+    }));
   }
 
   function queue(body){
@@ -679,10 +693,11 @@ const QUESTIONS = [
     send(body).then(() => {
       drop(DRAFT);
       finish('Your feedback has been received.');
-    }).catch(() => {
+    }).catch(err => {
       queue(body);
       drop(DRAFT);
       finish('Saved on this device. It will send the next time this page is opened online.');
+      report('Not saved: ' + (err && err.message) + '\n' + lastReply);
     });
   }
 
@@ -695,6 +710,49 @@ const QUESTIONS = [
     render();
     window.scrollTo(0, 0);
   });
+
+  /* ------------------------------------------------------------
+     Open this page with ?debug=1 on the end of the address and a
+     panel appears along the bottom: which endpoint is in use, how
+     many responses are still waiting on this device, and a tap to
+     send one test row. Attendees never see it.
+     ------------------------------------------------------------ */
+  const DEBUG = /[?&]debug=1(&|$)/.test(location.search);
+  let panel = null;
+
+  function report(text){
+    if (window.console && console.warn) console.warn('[feedback] ' + text);
+    if (!DEBUG) return;
+    if (!panel){
+      panel = document.createElement('pre');
+      panel.style.cssText =
+        'position:fixed;left:0;right:0;bottom:0;z-index:99;margin:0;cursor:pointer;' +
+        'max-height:45vh;overflow:auto;background:#0E1E38;color:#F3EFF5;white-space:pre-wrap;' +
+        'font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;padding:.7rem .9rem';
+      panel.addEventListener('click', testRow);
+      document.body.appendChild(panel);
+    }
+    panel.textContent = text;
+  }
+
+  function testRow(){
+    report('Sending a test row...');
+    send({
+      event: CONFIG.event, theme: CONFIG.theme, date: CONFIG.date, branch: CONFIG.branch,
+      submitted: new Date().toISOString(),
+      answers: [{ id:'overall', label:'Overall rating', value:'Test row, safe to delete' }]
+    }).then(r => report(
+      'Saved.\nRow ' + r.row + ' of "' + (r.tab || '?') + '" in "' + (r.file || '?') + '".\n\n' + lastReply
+    )).catch(e => report(
+      'Failed: ' + e.message + '\n\n' + lastReply + '\n\nTap to try again.'
+    ));
+  }
+
+  if (DEBUG){
+    report('Endpoint: ' + (CONFIG.endpoint || '(none set)') +
+           '\nWaiting on this device: ' + ((load(QUEUE) || []).length) +
+           '\n\nTap this panel to send a test row.');
+  }
 
   window.addEventListener('online', flush);
   flush();
