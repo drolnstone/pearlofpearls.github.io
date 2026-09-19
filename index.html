@@ -172,6 +172,10 @@
   .ev h3{font-size:1.18rem}
   .ev .detail{font-size:.92rem;opacity:.7;margin:.4rem 0 0}
   .ev .note{font-size:.94rem;opacity:.85;margin:.6rem 0 0;max-width:56ch}
+  .ev .evlink{
+    display:inline-block;margin-top:.7rem;font-size:.9rem;font-weight:600;
+    color:var(--drop);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:2px
+  }
   .ev .tag{
     font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
     color:var(--drop);white-space:nowrap;align-self:flex-start
@@ -742,6 +746,8 @@
                  the same day as a recurring date replaces it.
      announce  : optional. Something confirmed in principle but
                  not yet dated. Delete it once a date is set.
+     link      : optional, on a one-off event.
+                 { href: "/feedback.html", text: "Share your feedback" }
    Past dates disappear from the page by themselves.
    ============================================================ */
 
@@ -818,10 +824,6 @@ const BRANCHES = [
     id: "calabar",
     name: "Calabar",
     line: "Calabar, Nigeria. Where Pearl of Pearls began in 2015.",
-    announce: {
-      title: "INSPIRE HER Conference 2026 \u00b7 The Supernatural Tribe",
-      text: "Calabar joins the movement's conference on the same theme, expected on the first weekend of September. Speakers and venue are being confirmed, and the date will appear here as soon as it is settled. Write to us if you would like to be told when it is announced."
-    },
     recurring: [
       {
         every: "week", weekday: 3, limit: 6,
@@ -830,7 +832,16 @@ const BRANCHES = [
         note: "A weekly prayer meeting open to females of all ages, grown out of many years of INSPIRE HER conferences. Girls, students, mothers and grandmothers pray together, joining online from wherever they are."
       }
     ],
-    events: []
+    events: [
+      {
+        date: "2026-09-19",
+        title: "INSPIRE HER Conference 2026",
+        detail: "Saturday, 10.00am \u00b7 RCCG Prince of Peace Parish, opposite Prof. Eyo Ita House, Marian, Calabar",
+        note: "Theme: The Supernatural Tribe (Luke 1:37-45; Job 22:28). A woman to woman mentorship conference with Chief Magistrate Deborah Asuquo, Dr (Mrs) Komommo Iwara, Prof. (Mrs) Idongesit Eteng, Pst (Mrs) Esther Ademola and Offah Okorn, and music from Rita John. Worship, the Word, impartation, mentorship, free medical checks, dance and skill acquisition. Free to attend.",
+        tag: "Today",
+        link: { href: "/feedback.html", text: "Share your feedback" }
+      }
+    ]
   }
 ];
 
@@ -970,6 +981,13 @@ const MONTHS_AHEAD = 4;   // how far forward to list the regular dates
         n.className = 'note';
         n.textContent = e.note;
         body.appendChild(n);
+      }
+      if (e.link && e.link.href){
+        const a = document.createElement('a');
+        a.className = 'evlink';
+        a.href = e.link.href;
+        a.textContent = e.link.text || 'More';
+        body.appendChild(a);
       }
 
       const tag = document.createElement('span');

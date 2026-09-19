@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>INSPIRE HER 2026 feedback | Pearl of Pearls</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.ico?v=3" sizes="any">
+<link rel="icon" type="image/png" href="logo.png?v=3">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#0E1E38;
+    --ink-soft:#1B2E4F;
+    --nacre:#F3EFF5;
+    --nacre-2:#E4E8F2;
+    --drop:#E8175D;
+    --gold:#C9A227;
+    --paper:#FBFAFC;
+    --line:rgba(14,30,56,.14);
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Karla',system-ui,sans-serif;
+    font-size:17px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    -webkit-text-size-adjust:100%;
+  }
+  h1,h2{font-family:'Fraunces',Georgia,serif;font-weight:400;line-height:1.1;margin:0}
+  button{font:inherit;color:inherit}
+
+  .screen{
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    width:min(640px,100%);
+    margin-inline:auto;
+    padding:max(1.1rem,env(safe-area-inset-top)) 1.25rem max(1.1rem,env(safe-area-inset-bottom));
+  }
+  .screen[hidden]{display:none}
+
+  /* ---------- header ---------- */
+  .top{flex:0 0 auto}
+  .ev{
+    font-family:'Fraunces',Georgia,serif;
+    font-size:1.02rem;
+    line-height:1.25;
+    margin:0;
+  }
+  .ev span{display:block;font-family:'Karla',sans-serif;font-size:.82rem;opacity:.6;margin-top:.15rem}
+
+  /* the strand: one pearl per question */
+  .strand{
+    position:relative;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:2px;
+    margin:1.15rem 0 0;
+    padding:0 2px;
+  }
+  .strand::before{
+    content:"";position:absolute;left:2px;right:2px;top:50%;
+    height:1px;background:var(--line);
+  }
+  .pearl{
+    position:relative;
+    width:11px;height:11px;border-radius:50%;
+    background:var(--paper);
+    box-shadow:inset 0 0 0 1px rgba(14,30,56,.28);
+    flex:0 0 auto;
+  }
+  .pearl.filled{
+    background:radial-gradient(circle at 34% 30%, #fff 0%, var(--nacre-2) 38%, var(--ink-soft) 100%);
+    box-shadow:inset 0 0 0 1px rgba(14,30,56,.3);
+  }
+  .pearl.now{
+    width:15px;height:15px;
+    background:var(--drop);
+    box-shadow:0 0 0 3px rgba(232,23,93,.16);
+  }
+  .count{font-size:.74rem;letter-spacing:.06em;opacity:.55;margin:.55rem 0 0}
+
+  /* ---------- question ---------- */
+  .q{
+    flex:1 1 auto;
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+    padding-top:1.6rem;
+  }
+  .q h1{
+    font-size:clamp(1.42rem,5.4vw,1.85rem);
+    max-width:20ch;
+    margin-bottom:1.15rem;
+  }
+  .field{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:.3rem}
+
+  .opt{
+    display:flex;align-items:center;gap:.75rem;
+    width:100%;text-align:left;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:0;
+    padding:.72rem .9rem;
+    margin-bottom:.45rem;
+    cursor:pointer;
+  }
+  .opt .box{
+    flex:0 0 auto;width:15px;height:15px;
+    border:1px solid rgba(14,30,56,.4);
+    background:transparent;
+  }
+  .opt.round .box{border-radius:50%}
+  .opt[aria-pressed="true"]{
+    border-color:var(--ink);
+    background:var(--nacre);
+  }
+  .opt[aria-pressed="true"] .box{
+    background:var(--drop);
+    border-color:var(--drop);
+    box-shadow:inset 0 0 0 2px var(--nacre);
+  }
+  .opt:focus-visible,.nav button:focus-visible,.grid button:focus-visible,
+  input:focus-visible,textarea:focus-visible,.done button:focus-visible{
+    outline:2px solid var(--drop);outline-offset:2px;
+  }
+
+  textarea,input[type="text"]{
+    width:100%;
+    font-family:inherit;font-size:1rem;color:inherit;
+    background:var(--paper);
+    border:1px solid var(--line);
+    padding:.7rem .85rem;
+    border-radius:0;
+  }
+  textarea{min-height:8.5rem;resize:vertical;line-height:1.5}
+  .other{margin:.15rem 0 .45rem;padding-left:0}
+
+  .contact label{display:block;margin-bottom:.8rem}
+  .contact span{display:block;font-size:.82rem;opacity:.65;margin-bottom:.25rem}
+
+  /* ratings */
+  .rate{padding:.72rem 0;border-top:1px solid var(--line)}
+  .rate:last-child{border-bottom:1px solid var(--line)}
+  .rate p{margin:0 0 .45rem;font-size:.93rem;line-height:1.3}
+  .pills{display:flex;gap:.35rem}
+  .pills button{
+    flex:1 1 0;min-width:0;
+    font-size:.78rem;padding:.48rem .2rem;
+    border:1px solid var(--line);background:transparent;
+    border-radius:0;cursor:pointer;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .pills button[aria-pressed="true"]{
+    background:var(--ink);color:var(--nacre);border-color:var(--ink);
+  }
+  .pills button:focus-visible{outline:2px solid var(--drop);outline-offset:2px}
+
+  /* ---------- footer ---------- */
+  .nav{
+    flex:0 0 auto;
+    display:flex;align-items:center;gap:.7rem;
+    padding-top:1rem;
+    border-top:1px solid var(--line);
+  }
+  .nav button{
+    border:1px solid var(--ink);
+    background:transparent;
+    padding:.72rem 1.15rem;
+    white-space:nowrap;
+    border-radius:0;
+    cursor:pointer;
+    letter-spacing:.02em;
+  }
+  .nav .primary{
+    background:var(--ink);color:var(--nacre);
+    margin-left:auto;
+  }
+  .nav .primary[disabled]{opacity:.45;cursor:default}
+  .nav .skip{border-color:transparent;opacity:.6;padding:.72rem .45rem}
+
+  .notice{
+    flex:0 0 auto;
+    font-size:.86rem;
+    background:var(--nacre);
+    border-left:3px solid var(--drop);
+    padding:.6rem .8rem;
+    margin-top:.8rem;
+  }
+  .notice[hidden]{display:none}
+
+  /* ---------- done ---------- */
+  .done{
+    min-height:100dvh;
+    display:flex;flex-direction:column;justify-content:center;
+    width:min(640px,100%);margin-inline:auto;padding:2rem 1.25rem;
+  }
+  .done[hidden]{display:none}
+  .done h2{font-size:clamp(1.8rem,7vw,2.5rem);max-width:14ch}
+  .done p{margin:.9rem 0 0;opacity:.75;max-width:40ch}
+  .done .acts{margin-top:2.2rem;display:flex;flex-wrap:wrap;gap:.7rem}
+  .done button,.done a{
+    border:1px solid var(--ink);background:transparent;color:inherit;
+    padding:.72rem 1.4rem;cursor:pointer;text-decoration:none;
+  }
+  .done .again{background:var(--ink);color:var(--nacre)}
+
+  @media (prefers-reduced-motion:no-preference){
+    .q{animation:in .22s ease-out}
+    @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  }
+</style>
+</head>
+<body>
+
+<main class="screen" id="screen">
+  <div class="top">
+    <p class="ev" id="evTitle"></p>
+    <div class="strand" id="strand" aria-hidden="true"></div>
+    <p class="count" id="count"></p>
+  </div>
+
+  <section class="q" id="q" aria-live="polite">
+    <h1 id="qText"></h1>
+    <div class="field" id="field"></div>
+  </section>
+
+  <p class="notice" id="notice" hidden></p>
+
+  <div class="nav">
+    <button type="button" id="back">Back</button>
+    <button type="button" id="skip" class="skip">Skip</button>
+    <button type="button" id="next" class="primary">Next</button>
+  </div>
+</main>
+
+<section class="done" id="done" hidden>
+  <h2 id="doneTitle">Thank you.</h2>
+  <p id="doneText"></p>
+  <div class="acts">
+    <button type="button" class="again" id="again">Add another response</button>
+    <a href="/" id="homeLink">Pearl of Pearls</a>
+  </div>
+</section>
+
+<script>
+/* ============================================================
+   SETTINGS
+   Change this block only. Everything on the page is drawn
+   from it, so the same file serves any event or branch.
+
+   endpoint : the Google Apps Script web app URL that receives
+              responses. Blank means nothing is sent.
+   {event}  : in any question, replaced by the event name.
+   ============================================================ */
+
+const CONFIG = {
+  endpoint : "https://script.google.com/macros/s/AKfycbyQGYu5cyiEi3tOjcYYbTwVPRzcuUPL9tPalI362OVf4-1TEHgmQSM0k0MbKlAlZYqh/exec",
+  event    : "INSPIRE HER 2026",
+  theme    : "The Supernatural Tribe",
+  date     : "19 September 2026",
+  branch   : "Calabar",
+  home     : "/"
+};
+
+/* ------------------------------------------------------------
+   QUESTIONS
+   type: "single" | "multi" | "text" | "grid" | "contact"
+   required: true means Next stays shut until it is answered.
+   other: true adds a free text box to a choice list.
+   ------------------------------------------------------------ */
+
+const QUESTIONS = [
+  {
+    id:"overall", type:"single", required:true,
+    label:"Overall rating",
+    text:"Overall, how would you rate {event}?",
+    options:["Excellent","Very good","Good","Fair","Poor"]
+  },
+  {
+    id:"enjoyed", type:"multi", other:true,
+    label:"Parts enjoyed most",
+    text:"Which parts of the programme did you enjoy most?",
+    options:["Worship","Academic excellence","Women's rights","Sexual purity",
+             "Health talk and checks","Word and impartation","Panel discussion",
+             "Games","Movie and discussion","Networking"]
+  },
+  {
+    id:"impact", type:"text",
+    label:"Session that impacted most",
+    text:"Which session or activity impacted you most, and why?"
+  },
+  {
+    id:"takeaway", type:"text",
+    label:"Biggest takeaway",
+    text:"What is your biggest takeaway from today?"
+  },
+  {
+    id:"ratings", type:"grid",
+    label:"Ratings",
+    text:"Please rate the following.",
+    rows:["Programme and organisation","Speakers and sessions",
+          "Worship and spiritual experience","Venue and comfort",
+          "Ushers and volunteers"],
+    columns:["Excellent","Good","Fair","Poor"]
+  },
+  {
+    id:"improve", type:"text",
+    label:"What to improve",
+    text:"What should we improve for future events?"
+  },
+  {
+    id:"topics", type:"text",
+    label:"Topics for next time",
+    text:"What topics would you like us to cover next time?"
+  },
+  {
+    id:"interest", type:"multi", other:true,
+    label:"Future activities of interest",
+    text:"Which future activities interest you?",
+    options:["Mentorship","Skill acquisition","Health","Career and academic",
+             "Entrepreneurship","Spiritual growth","Women's rights"]
+  },
+  {
+    id:"recommend", type:"single",
+    label:"Would recommend",
+    text:"Would you recommend {event} to another female?",
+    options:["Definitely","Probably","Not sure","No"]
+  },
+  {
+    id:"involve", type:"multi",
+    label:"Involvement",
+    text:"Would you like to be involved in future activities?",
+    options:["Volunteer","Mentor","Support","Participate","No"]
+  },
+  {
+    id:"comments", type:"text",
+    label:"Final comments",
+    text:"Any final comments, suggestions or testimony?"
+  },
+  {
+    id:"contact", type:"contact",
+    label:"Contact",
+    text:"Leave your details if you would like us to contact you.",
+    fields:[
+      {id:"name",  label:"Name"},
+      {id:"phone", label:"Phone"},
+      {id:"email", label:"Email"}
+    ]
+  }
+];
+
+/* ============================================================
+   Below this line is machinery.
+   ============================================================ */
+
+(function(){
+  const DRAFT = "pop-feedback-draft";
+  const QUEUE = "pop-feedback-queue";
+
+  const el = {
+    screen:   document.getElementById('screen'),
+    evTitle:  document.getElementById('evTitle'),
+    strand:   document.getElementById('strand'),
+    count:    document.getElementById('count'),
+    qText:    document.getElementById('qText'),
+    field:    document.getElementById('field'),
+    notice:   document.getElementById('notice'),
+    back:     document.getElementById('back'),
+    skip:     document.getElementById('skip'),
+    next:     document.getElementById('next'),
+    done:     document.getElementById('done'),
+    doneTitle:document.getElementById('doneTitle'),
+    doneText: document.getElementById('doneText'),
+    again:    document.getElementById('again'),
+    homeLink: document.getElementById('homeLink')
+  };
+
+  let step = 0;
+  let answers = load(DRAFT) || {};
+
+  const fill = s => String(s).replace(/\{event\}/g, CONFIG.event);
+
+  function load(key){
+    try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : null; }
+    catch(err){ return null; }
+  }
+  function save(key, value){
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch(err){}
+  }
+  function drop(key){
+    try { localStorage.removeItem(key); } catch(err){}
+  }
+
+  /* ---------- header ---------- */
+  el.evTitle.innerHTML = '';
+  el.evTitle.appendChild(document.createTextNode(CONFIG.event));
+  const sub = document.createElement('span');
+  sub.textContent = [CONFIG.theme, CONFIG.branch, CONFIG.date].filter(Boolean).join(' \u00b7 ');
+  el.evTitle.appendChild(sub);
+  el.homeLink.href = CONFIG.home || '/';
+
+  QUESTIONS.forEach(() => {
+    const p = document.createElement('span');
+    p.className = 'pearl';
+    el.strand.appendChild(p);
+  });
+  const pearls = Array.from(el.strand.children);
+
+  function markStrand(){
+    pearls.forEach((p, i) => {
+      p.className = 'pearl' +
+        (answered(QUESTIONS[i]) ? ' filled' : '') +
+        (i === step ? ' now' : '');
+    });
+    el.count.textContent = (step + 1) + ' of ' + QUESTIONS.length;
+  }
+
+  /* ---------- answers ---------- */
+  function answered(q){
+    const a = answers[q.id];
+    if (a === undefined || a === null) return false;
+    if (Array.isArray(a)) return a.length > 0;
+    if (typeof a === 'object') return Object.keys(a).some(k => a[k]);
+    return String(a).trim() !== '';
+  }
+
+  function set(id, value){
+    answers[id] = value;
+    save(DRAFT, answers);
+    markStrand();
+    gate();
+  }
+
+  function gate(){
+    const q = QUESTIONS[step];
+    el.next.disabled = !!q.required && !answered(q);
+    el.skip.hidden = !!q.required || answered(q) || step === QUESTIONS.length - 1;
+    el.back.hidden = step === 0;
+    el.next.textContent = step === QUESTIONS.length - 1 ? 'Send feedback' : 'Next';
+  }
+
+  function notice(text){
+    el.notice.textContent = text || '';
+    el.notice.hidden = !text;
+  }
+
+  /* ---------- builders ---------- */
+  function choiceButton(text, pressed, round, onTap){
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'opt' + (round ? ' round' : '');
+    b.setAttribute('aria-pressed', pressed ? 'true' : 'false');
+    const box = document.createElement('span');
+    box.className = 'box';
+    const lab = document.createElement('span');
+    lab.textContent = text;
+    b.appendChild(box); b.appendChild(lab);
+    b.addEventListener('click', () => onTap(b));
+    return b;
+  }
+
+  function buildSingle(q){
+    q.options.forEach(opt => {
+      const b = choiceButton(opt, answers[q.id] === opt, true, () => {
+        set(q.id, opt);
+        Array.from(el.field.querySelectorAll('.opt'))
+             .forEach(o => o.setAttribute('aria-pressed', o === b ? 'true' : 'false'));
+        window.setTimeout(() => { if (!el.next.disabled) go(1); }, 160);
+      });
+      el.field.appendChild(b);
+    });
+  }
+
+  function buildMulti(q){
+    const chosen = Array.isArray(answers[q.id]) ? answers[q.id].slice() : [];
+    q.options.forEach(opt => {
+      const b = choiceButton(opt, chosen.indexOf(opt) > -1, false, () => {
+        const i = chosen.indexOf(opt);
+        if (i > -1) chosen.splice(i, 1); else chosen.push(opt);
+        b.setAttribute('aria-pressed', i > -1 ? 'false' : 'true');
+        set(q.id, chosen.slice());
+      });
+      el.field.appendChild(b);
+    });
+
+    if (q.other){
+      const key = q.id + '_other';
+      const box = document.createElement('input');
+      box.type = 'text';
+      box.className = 'other';
+      box.placeholder = 'Something else';
+      box.value = answers[key] || '';
+      box.addEventListener('input', () => set(key, box.value));
+      el.field.appendChild(box);
+    }
+  }
+
+  function buildText(q){
+    const t = document.createElement('textarea');
+    t.value = answers[q.id] || '';
+    t.setAttribute('aria-label', fill(q.text));
+    t.addEventListener('input', () => set(q.id, t.value));
+    el.field.appendChild(t);
+  }
+
+  function buildGrid(q){
+    const stored = (answers[q.id] && typeof answers[q.id] === 'object') ? answers[q.id] : {};
+    const current = Object.assign({}, stored);
+
+    q.rows.forEach(row => {
+      const block = document.createElement('div');
+      block.className = 'rate';
+
+      const name = document.createElement('p');
+      name.id = 'rate-' + row.replace(/\W+/g, '-').toLowerCase();
+      name.textContent = row;
+      block.appendChild(name);
+
+      const pills = document.createElement('div');
+      pills.className = 'pills';
+      pills.setAttribute('role', 'group');
+      pills.setAttribute('aria-labelledby', name.id);
+
+      q.columns.forEach(col => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = col;
+        b.setAttribute('aria-pressed', current[row] === col ? 'true' : 'false');
+        b.addEventListener('click', () => {
+          current[row] = col;
+          Array.from(pills.children)
+               .forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+          set(q.id, Object.assign({}, current));
+        });
+        pills.appendChild(b);
+      });
+
+      block.appendChild(pills);
+      el.field.appendChild(block);
+    });
+  }
+
+  function buildContact(q){
+    const wrap = document.createElement('div');
+    wrap.className = 'contact';
+    const stored = (answers[q.id] && typeof answers[q.id] === 'object') ? answers[q.id] : {};
+    const current = Object.assign({}, stored);
+    q.fields.forEach(f => {
+      const label = document.createElement('label');
+      const span = document.createElement('span');
+      span.textContent = f.label;
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = current[f.id] || '';
+      input.autocomplete = f.id === 'email' ? 'email' : (f.id === 'phone' ? 'tel' : 'name');
+      input.addEventListener('input', () => {
+        current[f.id] = input.value;
+        set(q.id, Object.assign({}, current));
+      });
+      label.appendChild(span); label.appendChild(input);
+      wrap.appendChild(label);
+    });
+    el.field.appendChild(wrap);
+  }
+
+  /* ---------- render ---------- */
+  function render(){
+    const q = QUESTIONS[step];
+    notice('');
+    el.qText.textContent = fill(q.text);
+    el.field.innerHTML = '';
+    el.field.scrollTop = 0;
+
+    if (q.type === 'single')  buildSingle(q);
+    else if (q.type === 'multi')   buildMulti(q);
+    else if (q.type === 'grid')    buildGrid(q);
+    else if (q.type === 'contact') buildContact(q);
+    else buildText(q);
+
+    markStrand();
+    gate();
+  }
+
+  function go(by){
+    const at = step + by;
+    if (at < 0) return;
+    if (at >= QUESTIONS.length){ submit(); return; }
+    step = at;
+    render();
+    el.screen.scrollIntoView({ block:'start' });
+  }
+
+  el.back.addEventListener('click', () => go(-1));
+  el.skip.addEventListener('click', () => go(1));
+  el.next.addEventListener('click', () => go(1));
+
+  /* ---------- sending ---------- */
+  function payload(){
+    return {
+      event:     CONFIG.event,
+      theme:     CONFIG.theme,
+      date:      CONFIG.date,
+      branch:    CONFIG.branch,
+      submitted: new Date().toISOString(),
+      answers:   QUESTIONS.map(q => {
+        let value = answers[q.id];
+        if (Array.isArray(value)){
+          const extra = answers[q.id + '_other'];
+          value = value.concat(extra ? [extra] : []).join('; ');
+        } else if (value && typeof value === 'object'){
+          value = Object.keys(value)
+                        .filter(k => value[k])
+                        .map(k => k + ': ' + value[k])
+                        .join('; ');
+        } else if (value === undefined || value === null){
+          value = '';
+        }
+        return { id:q.id, label:q.label || q.id, value:String(value).trim() };
+      })
+    };
+  }
+
+  function send(body){
+    return fetch(CONFIG.endpoint, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify(body)
+    }).then(r => {
+      if (!r.ok) throw new Error('rejected');
+      return true;
+    });
+  }
+
+  function queue(body){
+    const q = load(QUEUE) || [];
+    q.push(body);
+    save(QUEUE, q);
+  }
+
+  function flush(){
+    if (!CONFIG.endpoint) return;
+    const q = load(QUEUE) || [];
+    if (!q.length) return;
+    save(QUEUE, []);
+    q.forEach(item => { send(item).catch(() => queue(item)); });
+  }
+
+  function finish(message){
+    el.screen.hidden = true;
+    el.done.hidden = false;
+    el.doneText.textContent = message;
+    window.scrollTo(0, 0);
+  }
+
+  function submit(){
+    const body = payload();
+    el.next.disabled = true;
+
+    if (!CONFIG.endpoint){
+      queue(body);
+      drop(DRAFT);
+      finish('Saved on this device. No endpoint is set, so nothing has been sent.');
+      return;
+    }
+
+    notice('Sending.');
+    send(body).then(() => {
+      drop(DRAFT);
+      finish('Your feedback has been received.');
+    }).catch(() => {
+      queue(body);
+      drop(DRAFT);
+      finish('Saved on this device. It will send the next time this page is opened online.');
+    });
+  }
+
+  el.again.addEventListener('click', () => {
+    answers = {};
+    drop(DRAFT);
+    step = 0;
+    el.done.hidden = true;
+    el.screen.hidden = false;
+    render();
+    window.scrollTo(0, 0);
+  });
+
+  window.addEventListener('online', flush);
+  flush();
+  render();
+})();
+</script>
+</body>
+</html>
