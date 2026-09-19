@@ -377,6 +377,52 @@
   footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem;padding-top:2rem;border-top:1px solid rgba(243,239,245,.14)}
   footer a{color:rgba(243,239,245,.75)}
 
+  /* live on facebook */
+  .liveband{
+    background:var(--ink);color:var(--nacre);
+    border-bottom:3px solid var(--drop);
+    padding:.9rem 0;
+  }
+  .liveband.playing{padding:1.7rem 0 2rem}
+  .livehead{display:flex;align-items:center;gap:.55rem}
+  .livedot{
+    width:9px;height:9px;border-radius:50%;background:var(--drop);flex:0 0 auto;
+    animation:livepulse 2s ease-in-out infinite
+  }
+  @keyframes livepulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.75)}}
+  .livelabel{
+    font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;
+    font-weight:600;color:var(--drop)
+  }
+  .livetitle{
+    font-family:'Fraunces',Georgia,serif;font-size:1.32rem;line-height:1.25;
+    margin:.45rem 0 1.1rem
+  }
+  .livevideo{
+    position:relative;width:min(760px,100%);aspect-ratio:16/9;
+    background:#000;border:1px solid rgba(243,239,245,.2)
+  }
+  .livevideo iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .livenote{font-size:.82rem;color:rgba(243,239,245,.58);margin:.75rem 0 0}
+  .livecta{
+    display:inline-block;margin-top:1rem;padding:.62rem 1.35rem;
+    background:var(--drop);color:#fff;text-decoration:none;
+    font-size:.86rem;font-weight:600;letter-spacing:.03em;
+    transition:transform .2s
+  }
+  .livecta:hover{transform:translateY(-2px)}
+
+  /* the slim form, on a day with an event but no broadcast pasted in */
+  .liveband:not(.playing) .wrap{
+    display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.4rem
+  }
+  .liveband:not(.playing) .livetitle{margin:0;font-size:1.02rem}
+  .liveband:not(.playing) .livecta{margin:0 0 0 auto}
+  @media (max-width:600px){
+    .liveband:not(.playing) .livecta{margin:.3rem 0 0;width:100%;text-align:center}
+    .livetitle{font-size:1.14rem}
+  }
+
   /* back to top */
   #toTop{
     position:fixed;right:clamp(1rem,3vw,2rem);bottom:clamp(1rem,3vw,2rem);
@@ -429,6 +475,8 @@
 </style>
 </head>
 <body>
+
+<div id="liveBand"></div>
 
 <header class="hero">
   <div class="wrap">
@@ -1221,6 +1269,114 @@ const GALLERY = [
     if (Math.abs(dx) > 45) step(dx < 0 ? 1 : -1);
     x0 = null;
   }, {passive:true});
+})();
+</script>
+
+<script>
+/* ============================================================
+   LIVE ON FACEBOOK
+
+   The band under the hero appears two ways.
+
+   1. You are broadcasting right now.
+      Paste the broadcast's Facebook URL into LIVE.url below and
+      reupload this file. The band carries the player itself.
+      Put it back to "" when the broadcast ends.
+
+      To get the URL: open the live post on Facebook, tap the
+      three dots, Copy link. It looks like
+        https://www.facebook.com/pearlofpearls/videos/1234567890/
+      The post has to be public, or Facebook will not embed it.
+
+   2. You have pasted nothing, but a one-off event in the diary
+      above is dated today. The band appears by itself and sends
+      people to the page's live tab. Add live:false to an event
+      to keep it from doing that.
+
+   On every other day the band is not rendered and nothing from
+   Facebook is loaded at all.
+   ============================================================ */
+
+const LIVE = {
+  enabled : true,
+  url     : "",
+  page    : "https://www.facebook.com/pearlofpearls"
+};
+
+(function(){
+  const host = document.getElementById('liveBand');
+  if (!host || !LIVE.enabled) return;
+
+  const now = new Date();
+  const iso = now.getFullYear() + '-' +
+              String(now.getMonth()+1).padStart(2,'0') + '-' +
+              String(now.getDate()).padStart(2,'0');
+
+  let occasion = null;
+  if (typeof BRANCHES !== 'undefined'){
+    BRANCHES.forEach(b => (b.events || []).forEach(e => {
+      if (!occasion && e.date === iso && e.live !== false){
+        occasion = { title: e.title, branch: b.name };
+      }
+    }));
+  }
+
+  const url = String(LIVE.url || '').trim();
+  if (!url && !occasion) return;          // nothing to say today
+
+  const band = document.createElement('div');
+  band.className = 'liveband' + (url ? ' playing' : '');
+
+  const wrap = document.createElement('div');
+  wrap.className = 'wrap';
+
+  const head = document.createElement('div');
+  head.className = 'livehead';
+  const dot = document.createElement('span');
+  dot.className = 'livedot';
+  const label = document.createElement('span');
+  label.className = 'livelabel';
+  label.textContent = url ? 'Live now' : 'Live today';
+  head.appendChild(dot); head.appendChild(label);
+  wrap.appendChild(head);
+
+  const title = document.createElement('p');
+  title.className = 'livetitle';
+  title.textContent = occasion
+    ? occasion.title + ' \u00b7 ' + occasion.branch
+    : 'We are broadcasting on Facebook.';
+  wrap.appendChild(title);
+
+  if (url){
+    const frame = document.createElement('div');
+    frame.className = 'livevideo';
+    const f = document.createElement('iframe');
+    f.src = 'https://www.facebook.com/plugins/video.php?href=' +
+            encodeURIComponent(url) + '&show_text=false&autoplay=true&width=560';
+    f.title = 'Pearl of Pearls live on Facebook';
+    f.setAttribute('scrolling','no');
+    f.setAttribute('allowfullscreen','true');
+    f.setAttribute('allow','autoplay; encrypted-media; picture-in-picture; web-share');
+    frame.appendChild(f);
+    wrap.appendChild(frame);
+
+    const note = document.createElement('p');
+    note.className = 'livenote';
+    note.textContent = 'The player starts without sound. Tap it to listen, ' +
+                       'or open it on Facebook for the full screen.';
+    wrap.appendChild(note);
+  }
+
+  const cta = document.createElement('a');
+  cta.className = 'livecta';
+  cta.href = String(LIVE.page || '').replace(/\/+$/, '') + '/live';
+  cta.target = '_blank';
+  cta.rel = 'noopener';
+  cta.textContent = url ? 'Open on Facebook' : 'Watch on Facebook';
+  wrap.appendChild(cta);
+
+  band.appendChild(wrap);
+  host.appendChild(band);
 })();
 </script>
 
